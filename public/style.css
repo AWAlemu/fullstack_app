@@ -1,8 +1,13 @@
-body {
+* {box-sizing: border-box}
+#logo, #list {
 	font-family: 'Pacifico', cursive;
 	letter-spacing: 0.2em;
 }
-.main {
+input {
+	padding-left: 0.5em;
+	margin: 0.5em 0.5em 0.5em 0em;
+}
+.user-home-page {
 	max-width: 20em;
 	min-height: 25em;
 	margin: auto;
@@ -15,8 +20,8 @@ body {
 .heading h1 {
 	margin-bottom: 0;
 }
-hr {
-
+.hidden {
+	display: none;
 }
 .form {
 	display: block;
@@ -51,9 +56,46 @@ ul {
 	text-decoration: line-through;
 	color: gray;
 }
-button {
-	border: none;
-	background-color: #fff;
-	padding: 0;
-	display: none;
+
+
+#heading-background {
+	height: 4.5em;
+	width: 100%;
+	text-align: center;
+}
+#heading {
+	height: 4.5em;
+	width: 64em;
+	margin: auto;
+}
+#logo {
+	float: left;
+	margin: 0;
+}
+#login {
+	padding-top: 1em;
+	float: right;
+}
+#signup-background {
+	width: 100%;
+	height: 20em;
+}
+#signup-box {
+	width: 64em;
+	margin: auto;
+}
+#value-proposition {
+	width: 50%;
+	
+}
+#signup {
+	width: 50%;
+	float: right;
+	
+}
+.error {
+	color: red;
+}
+#signup-success {
+	color: green;
 }

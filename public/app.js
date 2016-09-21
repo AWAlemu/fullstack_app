@@ -62,6 +62,105 @@ $(document).ready(function() {
 	$('ol').on('click', 'li', function(){
 		$(this).toggleClass('checked');
 	});
-	
+	$('#login-form').on('submit', function(e) {
+		e.preventDefault();
+		var username = $('#login-form #usernameL').val();
+		var password = $('#login-form #passwordL').val();
+		$('#login-form #usernameL, #passwordL').val('********');
+		submitSignin(username, password);
+	});
+	$('#signup-form').on('submit', function(e) {
+		e.preventDefault();
+		validateSignupForm();
+		$('#signup-form #username, #password, #confirm-password').val('');
+		$('#usernameErr, #passwordErr, #confPass').text('');
+	});
 	getAndDisplayItems();
 });
+
+function validateSignupForm() {
+	var username = $('#username').val();
+	var password = $('#password').val();
+	var confPass = $('#confirm-password').val();
+	if(username.length < 4) {
+		$('#usernameErr').text('must be at least 4 characters long');
+	} else if(password.length < 8) {
+		$('#passwordErr').text('must be at least 8 characters long');
+	} else if(password !== confPass) {
+		$('#conf-passwordErr').text('must match password');
+	} else {
+		postSignupForm(username, password);
+	}
+}
+
+function submitSignin(username, password) {
+	var user = {username: username,
+				password: password 
+				};
+				console.log(user);
+    var ajax = $.ajax('/hidden', {
+        type: 'POST',
+        data: JSON.stringify(user),
+        dataType: 'json',
+        contentType: 'application/json'
+    });
+    ajax.done(function(res) {
+		console.log('res', res);
+		signinSuccessful();
+		// signinSuccessful();
+    }).fail(function(err) {
+    	console.log( err);
+    	// if(err.responseJSON.code == 11000) {
+    	// 	userNameTaken();
+    	// }
+    });
+}
+
+function postSignupForm(username, password) {
+	var item = {'username': username,
+				'password': password 
+				};
+    var ajax = $.ajax('/users', {
+        type: 'POST',
+        data: JSON.stringify(item),
+        dataType: 'json',
+        contentType: 'application/json'
+    });
+    ajax.done(function(res) {
+		signupSuccessful();
+    }).fail(function(err) {
+    	if(err.responseJSON.code == 11000) {
+    		userNameTaken();
+    	}
+    });
+}
+
+function userNameTaken() {
+	$('#usernameErr').text('username is already in use');
+}
+
+function signupSuccessful() {
+	$('#signup-success').show();
+};
+
+function signinSuccessful() {
+	renderUserHomePage();
+	// getUserData();
+};
+
+function renderUserHomePage() {
+	$('#login-signup-screen').hide();
+	$('.user-home-page').show();
+};
+
+function getUserData() {
+	var ajax = $.ajax('/items', {
+        type: 'GET',
+        dataType: 'json'
+    });
+    ajax.done(function(res) {
+    	
+    }).fail(function(err) {
+    	
+    });
+};
