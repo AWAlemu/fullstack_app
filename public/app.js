@@ -106,6 +106,11 @@ function submitSignin(username, password) {
     });
     ajax.done(function(res) {
 		console.log('res', res);
+		// if (res.body.access){
+		//  showhtml
+		// } else {
+		// 	logiin requre
+		// }
 		signinSuccessful();
 		// signinSuccessful();
     }).fail(function(err) {
@@ -114,6 +119,14 @@ function submitSignin(username, password) {
     	// 	userNameTaken();
     	// }
     });
+}
+
+function logout() {
+	var ajax = $.ajax('/logout', {
+		type: 'GET',
+		
+	}
+	)
 }
 
 function postSignupForm(username, password) {

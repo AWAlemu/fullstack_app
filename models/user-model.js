@@ -10,7 +10,7 @@ var UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
 });
 
 UserSchema.methods.validatePassword = function(password, callback) {

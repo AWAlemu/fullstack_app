@@ -1,5 +1,4 @@
 var passport = require('passport');
-// var BasicStrategy = require('passport-http').BasicStrategy;
 var server = require('./server');
 var bodyParser = require('body-parser');
 var User = require('./models/user-model').User;
@@ -9,13 +8,16 @@ var bcrypt = require('bcryptjs');
 var session = require('express-session');
 
 var app = server.app;
-// var jsonParser = bodyParser.json();
 app.use(bodyParser.json());
+
+app.use(session({secret: "fasfa7946sfadf46", resave: true, saveUninitialized:false, rolling: true, cookie: {maxAge: 60000}}));
 
 app.use(passport.initialize());
 
+app.use(passport.session());
+
 passport.serializeUser(function(user, done) {
-    done(null, user.username);
+    done(null, user._id);
 });
 
 passport.deserializeUser(function(username, done) {
@@ -52,35 +54,41 @@ passport.use(new LocalStrategy(
     });
   }
 ));
-app.use(session({secret: "fasfa7946sfadf46", resave: false, saveUninitialized:true}));
-app.use(passport.session());
 
-
-
-// var isAuthenticated = function (req, res, next) { 
-//     if (req.isAuthenticated()) {
-//         return next();
-//     } else {
+var isAuthenticated = function (req, res, next) { 
+    if (req.isAuthenticated()) {
+        return next();
+    } else {
     
-//         return res.status(401).send({
-//             success: false, msg: 'User needs to re-authenticated'
-//         });
-//     }
-// };
+        return res.status(401).send({
+            success: false, msg: 'User needs to re-authenticated'
+        });
+    }
+};
 
+app.get('/home', isAuthenticated, function(req, res, next) {
+   console.log('authenticated');
+   
+});
 
-app.get('/API/home/:username', function(req, res, next) {
-  console.log(req);
-  if (req.isAuthenticated()) {
-      console.log('req user', req.user);
-      res.json({
-          message: req.params.username + '\'s data'
-      });
-  } else {
-      return res.status(401).send({
-        success: false, msg: 'User needs to re-authenticated'
-    });
-  }
+app.get('/API/home/:username', isAuthenticated, function(req, res, next) {
+    console.log('ApI home authenticated');
+//   if (req.isAuthenticated()) {
+//       console.log('req user', req.user);
+//       res.json({
+//           message: req.params.username + '\'s data'
+//       });
+//   } else {
+//       return res.status(401).send({
+//         success: false, msg: 'User needs to re-authenticated'
+//     });
+//   }
+});
+
+app.get('/logout', function(req, res) {
+    req.logout();
+    req.session.destroy();
+    res.redirect('/');
 });
 
 app.post('/hidden', function(req, res, next) {
@@ -103,13 +111,19 @@ app.post('/hidden', function(req, res, next) {
                 return next(err); 
             }
             user.password = '';
-            console.log('response object', res);
-            // console.log(req.session, 'session')
+            // console.log('response object', res);
+            console.log('req.sessionID', req.sessionID);
+            console.log('cookie', req.header.cookie);
+            console.log('req.user auth', req.user);
+            console.log('req session', req.session);
+            // res.redirect('/');
             return res.status(200).json({
+                // response: obj,
                 success: true,
                 authenticated: true,
                 user: {
-                    _id: user.username
+                    _id: user._id,
+                    username: user.username
                 }
             });
             //  return res.redirect('/' + user.username);
@@ -202,12 +216,6 @@ app.post('/users', function(req, res) {
     });
 });
 
-
-
-app.get('/', function(req, res){
-    console.log(req.isAuthenticated(), 'auth');
-    res.json({})
-});
 
 server.runServer();
 
