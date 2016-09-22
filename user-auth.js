@@ -68,12 +68,20 @@ app.use(passport.session());
 //     }
 // };
 
-// app.get('/:username', function(req, res, next) {
-//   console.log('req user', req.user);
-//   res.json({
-//       message: req.params.username + '\'s data'
-//   });
-// });
+
+app.get('/API/home/:username', function(req, res, next) {
+  console.log(req);
+  if (req.isAuthenticated()) {
+      console.log('req user', req.user);
+      res.json({
+          message: req.params.username + '\'s data'
+      });
+  } else {
+      return res.status(401).send({
+        success: false, msg: 'User needs to re-authenticated'
+    });
+  }
+});
 
 app.post('/hidden', function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
@@ -95,6 +103,8 @@ app.post('/hidden', function(req, res, next) {
                 return next(err); 
             }
             user.password = '';
+            console.log('response object', res);
+            // console.log(req.session, 'session')
             return res.status(200).json({
                 success: true,
                 authenticated: true,
@@ -190,6 +200,13 @@ app.post('/users', function(req, res) {
             });
         });
     });
+});
+
+
+
+app.get('/', function(req, res){
+    console.log(req.isAuthenticated(), 'auth');
+    res.json({})
 });
 
 server.runServer();
