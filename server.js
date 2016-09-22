@@ -11,7 +11,6 @@ var runServer = function(callback) {
        if (err && callback) {
            return callback(err);
        }
-        console.log('connected to database');
 
        app.listen(config.PORT, function() {
             console.log('Listening on localhost', config.PORT);
