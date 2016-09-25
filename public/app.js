@@ -43,7 +43,7 @@ $(document).ready(function() {
 	authenticate();
     var userInput = $('input[name=item]');
 	var addButton = $('#add-to-list');
-
+	//post item on click
 	addButton.mouseup(function(e) {
 		var item = userInput.val();
 	    userInput.val('');
