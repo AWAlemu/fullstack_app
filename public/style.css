@@ -40,6 +40,11 @@
 #signout-btn:hover {
 	cursor: pointer;
 }
+#instructions {
+	position: absolute;
+	left: 75%;
+	top: 25%;
+}
 #heading-home {
 	width: 21em;
 	text-align: center;
