@@ -1,6 +1,6 @@
 var chai = require('chai');
 var chaiHttp = require('chai-http');
-var server = require('../server.js');
+var server = require('./server');
 
 var should = chai.should();
 var app = server.app;
@@ -13,16 +13,8 @@ describe('Shopping List', function() {
             .get('/')
             .end(function(err, res) {
                 should.equal(err, null);
+                res.should.have.status(200);
                 done();
             });
     });
-    
-    // it('should ', function(done) {
-    //     chai.request()
-    //         .get()
-    //         .end(function(err, res) {
-                
-    //             done();
-    //     });
-    // });
 });

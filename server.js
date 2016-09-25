@@ -140,3 +140,5 @@ app.use('*', function(req, res) {
         message: 'Not Found'
     });
 });
+
+exports.app = app;
