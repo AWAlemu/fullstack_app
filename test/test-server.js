@@ -13,7 +13,6 @@ describe('Shopping List', function() {
             .get('/')
             .end(function(err, res) {
                 should.equal(err, null);
-                res.should.have.status(200);
                 done();
             });
     });
