@@ -1,45 +1,46 @@
-var MOCK_ITEMS = {
-	'items': [
-		{
-			'id': '11111',
-			'name': 'Item 1'
-		},
-		{
-			'id': '22222',
-			'name': 'Item 2'
-		},
-		{
-			'id': '33333',
-			'name': 'Item 3'
-		}
-		]
-};
-
-function getItems(callback) {
-	setTimeout(function() {callback(MOCK_ITEMS)}, 100);
-}
-
 function displayItems(data) {
-	for (var i = 0; i < data.items.length; i++) {
-		appendItem(data.items[i].name, data.items[i].id);
+	$('#list-results').empty();
+	for (var item in data) {
+		appendItem(data[item].name, data[item]._id, data[item].checked);
 	}
 }
 
-function getAndDisplayItems() {
-	getItems(displayItems);
-}
-
-function postItem(item) {
-	
-}
-
-function appendItem(item, id) {
-	if (item != "") {
-		$('ol').append('<li id='+ id +'>' + item + '</li>');
+function appendItem(item, id, checked) {
+	if (item) {
+		var itemElement = $('#item-template .item-box').clone();
+		itemElement.attr('id', id);
+		
+		var check = itemElement.find('.check');
+		check.attr('class', id);
+		
+		var itm = itemElement.find('.name');
+		itm.text(item);
+		
+		$('#list-results').append(itemElement);
+		if (checked) {
+			checkUncheck(id);
+		}
 	}
 }
 
+function renderEditItem(name, id) {
+	if (name && id) {
+		var inputEditer = $('#item-template .edit-item').clone();
+		
+		var input = inputEditer.find('input');
+		input.val(name);
+		
+		$('#' + id + ' .item').hide();
+		$('#' + id).append(inputEditer);
+	}	
+}
+
+function checkUncheck(id) {
+	$('#' + id + ' .name').toggleClass('checked');
+	$('#' + id + ' #check').toggleClass('checked');
+}
 $(document).ready(function() {
+	authenticate();
     var userInput = $('input[name=item]');
 	var addButton = $('#add-to-list');
 
@@ -48,34 +49,68 @@ $(document).ready(function() {
 	    userInput.val('');
 		postItem(item);
 	});
+    //post item on keypress
     userInput.on('keypress', function(e) {
-	   if (e.keyCode === 13) {
-	      var item = userInput.val();
-	      userInput.val('');
-	      e.preventDefault();
-          postItem(item);
+		if (e.keyCode === 13) {
+			var item = userInput.val();
+			userInput.val('');
+			e.preventDefault();
+			postItem(item);
 	   }
 	});
-	$('ol').on('dblclick', 'li', function() {
-		$(this).fadeOut(500);
+	//put edited item on keypress
+	$('ul').on('keypress', '.input-edit', function(e) {
+		if (e.keyCode === 13) {
+			e.preventDefault();
+
+			var id = this.parentElement.parentElement.parentElement.id;
+			var name = $('#' + id + ' input').val();
+			putItem(id, name, false);
+	   }
 	});
-	$('ol').on('click', 'li', function(){
-		$(this).toggleClass('checked');
+	//submit edit event
+	$('ul').on('click', '.edit-icon', function(e) {
+		var id = this.parentElement.parentElement.id;
+		var name = $('#' + id + ' input').val();
+		putItem(id, name, false);
 	});
+	//mark item checked or uncheck
+	$('ul').on('click', '#check', function(e) {
+		var id = this.parentElement.parentElement.id;
+		putItem(id, '', true);
+		checkUncheck(id);
+	});
+	//delete item event
+	$('ul').on('dblclick', '#check', function(e) {
+		var id = this.parentElement.parentElement.id;
+		deleteItem(id);
+		$('#' + id).fadeOut(300);
+	});
+	//edit item event
+	$('ul').on('dblclick', '.item-box', function(e){
+		var id = this.id;
+		var name = e.target.innerText;
+		renderEditItem(name, id);
+	});
+	//submit login form event
 	$('#login-form').on('submit', function(e) {
 		e.preventDefault();
 		var username = $('#login-form #usernameL').val();
 		var password = $('#login-form #passwordL').val();
-		$('#login-form #usernameL, #passwordL').val('********');
+		$('#login-form #usernameL, #passwordL').val('');
 		submitSignin(username, password);
 	});
+	//submit signou form
 	$('#signup-form').on('submit', function(e) {
 		e.preventDefault();
 		validateSignupForm();
 		$('#signup-form #username, #password, #confirm-password').val('');
 		$('#usernameErr, #passwordErr, #confPass').text('');
 	});
-	getAndDisplayItems();
+	//signout event
+	$('#signout-btn').on('click', function() {
+		logout();
+	})
 });
 
 function validateSignupForm() {
@@ -97,7 +132,6 @@ function submitSignin(username, password) {
 	var user = {username: username,
 				password: password 
 				};
-				console.log(user);
     var ajax = $.ajax('/hidden', {
         type: 'POST',
         data: JSON.stringify(user),
@@ -105,28 +139,22 @@ function submitSignin(username, password) {
         contentType: 'application/json'
     });
     ajax.done(function(res) {
-		console.log('res', res);
-		// if (res.body.access){
-		//  showhtml
-		// } else {
-		// 	logiin requre
-		// }
-		signinSuccessful();
-		// signinSuccessful();
+		if (res.success) {
+			renderUserHomePage();
+			getItems();
+		}
     }).fail(function(err) {
-    	console.log( err);
-    	// if(err.responseJSON.code == 11000) {
-    	// 	userNameTaken();
-    	// }
+    	authenticate();
     });
 }
 
 function logout() {
 	var ajax = $.ajax('/logout', {
 		type: 'GET',
-		
-	}
-	)
+	});
+	ajax.done(function(res) {
+		authenticate();
+	});
 }
 
 function postSignupForm(username, password) {
@@ -140,7 +168,7 @@ function postSignupForm(username, password) {
         contentType: 'application/json'
     });
     ajax.done(function(res) {
-		signupSuccessful();
+		$('#signup-success').show();
     }).fail(function(err) {
     	if(err.responseJSON.code == 11000) {
     		userNameTaken();
@@ -152,28 +180,83 @@ function userNameTaken() {
 	$('#usernameErr').text('username is already in use');
 }
 
-function signupSuccessful() {
-	$('#signup-success').show();
-};
-
-function signinSuccessful() {
-	renderUserHomePage();
-	// getUserData();
-};
-
 function renderUserHomePage() {
-	$('#login-signup-screen').hide();
+	$('.login-signup-screen').hide();
 	$('.user-home-page').show();
 };
 
-function getUserData() {
-	var ajax = $.ajax('/items', {
-        type: 'GET',
-        dataType: 'json'
+function renderLoginPage() {
+	$('.user-home-page').hide();
+	$('.login-signup-screen').show();
+}
+
+function authenticate() {
+	var ajax = $.ajax('/authenticate', {
+		type: 'GET',
+		dataType: 'json'
+	});
+	ajax.done(function(res) {
+	    if(!res.success) {
+	    	renderLoginPage();
+	    } else {
+	    	renderUserHomePage();
+	    	getItems();
+
+	    }
+	}).fail(function(err) {
+		renderLoginPage();
+	})
+}
+
+function postItem(name) {
+	var item = {'name': name};
+    var ajax = $.ajax('/API/items', {
+        type: 'POST',
+        data: JSON.stringify(item),
+        dataType: 'json',
+        contentType: 'application/json'
     });
     ajax.done(function(res) {
-    	
-    }).fail(function(err) {
-    	
+    	getItems();
     });
-};
+}
+
+function putItem(id, name, check) {
+	var item = {
+		_id: id,
+		name: name,
+		check: check,
+	};
+	var ajax = $.ajax(('/API/items/' + id), {
+		type: 'PUT',
+		data: JSON.stringify(item),
+		dataType: 'json',
+		contentType: 'application/json'
+	});
+	ajax.done(function(res) {
+		getItems();
+	});
+}
+
+function getItems() {
+	var ajax = $.ajax(('/API/items'), {
+		type: 'GET',
+		dataType: 'json'
+	});
+	ajax.done(function(res) {
+		displayItems(res);
+	});
+}
+
+function deleteItem(id) {
+	var item = {_id: id};
+	var ajax = $.ajax(('API/items/' + id), {
+		type: 'DELETE',
+		data: JSON.stringify(item),
+		dataType: 'json',
+		contentType: 'application/json'
+	});
+	ajax.done(function(res) {
+		getItems();
+	});
+}

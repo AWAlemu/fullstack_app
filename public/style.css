@@ -1,24 +1,52 @@
 * {box-sizing: border-box}
-#logo, #list {
-	font-family: 'Pacifico', cursive;
+.logo {
+	font-family: 'Coming Soon', cursive;
 	letter-spacing: 0.2em;
+	margin: 0.5em 0 0.5em 0;
 }
-input {
+#logo-landing {
+	float: left;
+	margin-bottom: 0;
+}
+.name {
+	font-family: 'Coming Soon', cursive;
+}
+.input-landing {
+	width: 18em;
 	padding-left: 0.5em;
-	margin: 0.5em 0.5em 0.5em 0em;
+	margin: 0.5em 0 0.5em 0;
+}
+.input-home {
+	width: 18em;
+	height: 1.5em;
+	padding-left: 0.5em;
+	margin: 0;
+	border: 1px solid #eaebec;
+
+	
 }
 .user-home-page {
-	max-width: 20em;
-	min-height: 25em;
+	max-width: 23em;
+	min-height: 100%;
+	overflow-y: auto;
 	margin: auto;
 	padding: 1em;
-	border: 2px solid black;
 }
-.heading, .form {
+#signout-btn {
+	position: absolute;
+	left: 85%;
+	top: 5%;
+}
+#signout-btn:hover {
+	cursor: pointer;
+}
+#heading-home {
+	width: 21em;
 	text-align: center;
 }
-.heading h1 {
-	margin-bottom: 0;
+.login-signup-screen hr {
+	margin: 0 auto 0 auto;
+	width: 64em;
 }
 .hidden {
 	display: none;
@@ -26,27 +54,40 @@ input {
 .form {
 	display: block;
 	float: left;
-	margin: 0 1em 0 3em;
+	margin: 0;
+	display: inline-block;
 }
-
-.list-container {
-	margin-left: 3.5em;
+.item-box {
+	display: inline-block;
+	width: 21em;
+	height: 2em;
+	padding-top: 0.19em;
+}
+.item {
+	height: 1.5em;
+	min-width: 16em;
+	margin-left: 0em;
+}
+.name {
+	cursor: pointer;
+	width: 17em;
+	float: right;
 }
 .edit-list-icons {
 	float: right;
 }
 .icon {
 	border: 1px solid #eaebec;
-	border-radius: 1.25em;
-	width: 2.25em;
+	width: 3em;
+	height: 1.5em;
 	text-align: center;
 	padding: 0.15em;
+	margin: 0em;
 	z-index: 999;
 }
 .icon:hover{
 	cursor: pointer;
 	background-color: gray;
-	border-radius: 1.5rem;
 }
 ul {
 	padding-left: 0;
@@ -54,25 +95,25 @@ ul {
 }
 .checked {
 	text-decoration: line-through;
-	color: gray;
+	color: #e6e6e6;
 }
-
-
+#check {
+	float: left;
+	width: 2em;
+	margin-right: 0em;
+}
 #heading-background {
 	height: 4.5em;
 	width: 100%;
 	text-align: center;
 }
-#heading {
+#heading-landing {
 	height: 4.5em;
 	width: 64em;
-	margin: auto;
-}
-#logo {
-	float: left;
-	margin: 0;
+	margin: 2em auto 0 auto;
 }
 #login {
+	text-align: center;
 	padding-top: 1em;
 	float: right;
 }
@@ -91,7 +132,9 @@ ul {
 #signup {
 	width: 50%;
 	float: right;
-	
+}
+#signup h2 {
+	margin-bottom: 0.5em;
 }
 .error {
 	color: red;

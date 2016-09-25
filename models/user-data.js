@@ -1,15 +1,13 @@
 var mongoose = require('mongoose');
 
 var ItemSchema = new mongoose.Schema({
-    name: {type: String, required: true}
+    user_id: {type: String, required: true},
+    name: {type: String, required: true},
+    checked: {type: Boolean, required: true}
 });
 
-var UserDataSchema = new mongoose.Schema({
-    username: {type: String, required: true, unique: true},
-    items: [ItemSchema]
-});
 
-var UserData = mongoose.model('UserDataSchema', UserDataSchema);
+var Item = mongoose.model('Item', ItemSchema);
 
-module.exports = UserData;
+module.exports = Item;
 

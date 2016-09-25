@@ -6,20 +6,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css"> 
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Coming+Soon" />	
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Architects+Daughter"/>	
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
 
 
 </head>
 <body>
-		<div id="login-signup-screen">
+		<div class="login-signup-screen hidden">
 			<div id="heading-background">
-				<div id="heading">
-					<h1 id="logo">Shopping List</h1>
+				<div id="heading-landing">
+					<h1 class="logo" id="logo-landing">Shopping List</h1>
 					<div id="login">
 						<form id="login-form">
-							<input type="text" id="usernameL" placeholder="username" required/>
-							<input type="password" id="passwordL" placeholder="password" required/>
-							<input type="submit" value="Log In">
+							<input class="input-landing" type="text" id="usernameL" placeholder="username" required/>
+							<input class="input-landing" type="password" id="passwordL" placeholder="password" required/>
+							<input class="btn" type="submit" value="Log In">
 						</form>
 					</div>
 				</div>
@@ -32,33 +34,52 @@
 						<form id="signup-form">
 							<h2>Sign UP</h2>
 							<p class="hidden" id="signup-success">Signup Successful. Login Above to Proceed!</p>
-							<input type="text" id="username" placeholder="username" required/><span class="error " id="usernameErr"></span><br>
+							<input class="input-landing" type="text" id="username" placeholder="username" required/><span class="error " id="usernameErr"></span><br>
 							
-							<input type="password" id="password" placeholder="password" required/><span class="error " id="passwordErr"></span><br>
+							<input class="input-landing" type="password" id="password" placeholder="password" required/><span class="error " id="passwordErr"></span><br>
 							
-							<input type="password" id="confirm-password" placeholder="confirm password" required/><span class="error " id="conf-passwordErr"></span><br>
+							<input class="input-landing" type="password" id="confirm-password" placeholder="confirm password" required/><span class="error " id="conf-passwordErr"></span><br>
 							
-							<input type="submit" value="Sign Up"/>
+							<input class="btn" type="submit" value="Sign Up"/>
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="user-home-page hidden">
-			<div class="heading">
-				<h1>Shopping List</h1>
+			<div id="heading-home">
+				<h1 class="logo" id="logo-home">Shopping List</h1>
+				<button id="signout-btn">Sign out</button>
 				<hr>
 			</div>
 			<div class="user-input">
 				<form class="form" action="">
-					<input type="text" name="item" placeholder="Enter Item">
+					<input class="input-home" type="text" name="item" placeholder="Enter Item">
 				</form>
-				<i id="add-to-list" class="icon fa fa-cart-plus"></i>
+				<i id="add-to-list" class="icon fa fa-plus-square"></i>
 			</div>
+			<br>
 			<div class="list-container">
-				<ol id="list">
-					<!--<li>First Item </li>-->
-				</ol>
+				<ul id="list">
+					<div id="list-results"></div>
+					<div id="item-template" class="hidden">
+						<div class="item-box">
+							<div class="item">
+								<div id="check">
+									<i class="icon fa fa-cart-plus"></i>
+								</div>
+								<li class="name">Item 1</li>
+							</div>
+						</div>
+						<div class="edit-item">
+							<form class="form" action="">
+								<input class="input-home input-edit" type="text" name="item"/>
+								<input class="hidden" type="submit" name=""/>
+							</form>
+							<i class="icon edit-icon fa fa-plus-square"></i>
+						</div>
+					</div>
+				</ul>
 			</div>
 		</div>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
