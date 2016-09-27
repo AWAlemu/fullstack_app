@@ -110,7 +110,7 @@ $(document).ready(function() {
     //signout event
     $('#signout-btn').on('click', function() {
         logout();
-    });
+    })
 });
 
 function validateSignupForm() {
@@ -185,7 +185,7 @@ function userNameTaken() {
 function renderUserHomePage() {
     $('.login-signup-screen').hide();
     $('.user-home-page').show();
-}
+};
 
 function renderLoginPage() {
     $('.user-home-page').hide();
@@ -207,7 +207,7 @@ function authenticate() {
         }
     }).fail(function(err) {
         renderLoginPage();
-    });
+    })
 }
 
 function postItem(name) {
