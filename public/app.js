@@ -108,9 +108,7 @@ $(document).ready(function() {
         $('#usernameErr, #passwordErr, #confPass').text('');
     });
     //signout event
-    $('#signout-btn').on('click', function() {
-        logout();
-    })
+    $('#signout-btn').on('click', logout);
 });
 
 function validateSignupForm() {
@@ -154,7 +152,7 @@ function logout() {
         type: 'GET',
     });
     ajax.done(function(res) {
-        authenticate();
+        renderLoginPage();
     });
 }
 
