@@ -39,8 +39,8 @@ function checkUncheck(id) {
     $('#' + id + ' .name').toggleClass('checked');
     $('#' + id + ' #check').toggleClass('checked');
 }
+
 $(document).ready(function() {
-    authenticate();
     var userInput = $('input[name=item]');
     var addButton = $('#add-to-list');
     //post item on click
@@ -109,6 +109,8 @@ $(document).ready(function() {
     });
     //signout event
     $('#signout-btn').on('click', logout);
+    
+    checkSession();
 });
 
 function validateSignupForm() {
@@ -143,7 +145,7 @@ function submitSignin(username, password) {
             getItems();
         }
     }).fail(function(err) {
-        authenticate();
+        renderLoginPage();
     });
 }
 
@@ -190,7 +192,7 @@ function renderLoginPage() {
     $('.login-signup-screen').show();
 }
 
-function authenticate() {
+function checkSession() {
     var ajax = $.ajax('/authenticate', {
         type: 'GET',
         dataType: 'json'
@@ -205,7 +207,7 @@ function authenticate() {
         }
     }).fail(function(err) {
         renderLoginPage();
-    })
+    });
 }
 
 function postItem(name) {

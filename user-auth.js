@@ -62,9 +62,8 @@ var isAuthenticated = function (req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     } else {
-    
-        return res.status(401).send({
-            success: false, msg: 'User needs to re-authenticated'
+        return res.send({
+            success: false, msg: 'User needs to be re-authenticated'
         });
     }
 };
