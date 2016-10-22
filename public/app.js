@@ -46,6 +46,7 @@ $(document).ready(function() {
     //post item on click
     addButton.mouseup(function(e) {
         var item = userInput.val();
+        item = item.trim();
         userInput.val('');
         postItem(item);
     });
@@ -103,9 +104,12 @@ $(document).ready(function() {
     //submit signou form
     $('#signup-form').on('submit', function(e) {
         e.preventDefault();
-        validateSignupForm();
+        var username = $('#username').val();
+        var password = $('#password').val();
+        var confPass = $('#confirm-password').val();
+        $('#usernameErr, #passwordErr, #conf-passwordErr').text('');
+        validateSignupForm(username, password, confPass);
         $('#signup-form #username, #password, #confirm-password').val('');
-        $('#usernameErr, #passwordErr, #confPass').text('');
     });
     //signout event
     $('#signout-btn').on('click', logout);
@@ -113,17 +117,21 @@ $(document).ready(function() {
     checkSession();
 });
 
-function validateSignupForm() {
-    var username = $('#username').val();
-    var password = $('#password').val();
-    var confPass = $('#confirm-password').val();
+function validateSignupForm(username, password, confPass) {
+    var valid = true;
     if (username.length < 4) {
         $('#usernameErr').text('must be at least 4 characters long');
-    } else if (password.length < 8) {
+        valid = false;
+    } 
+    if (password.length < 8) {
         $('#passwordErr').text('must be at least 8 characters long');
-    } else if (password !== confPass) {
+        valid = false;
+    } 
+    if (password !== confPass) {
         $('#conf-passwordErr').text('must match password');
-    } else {
+        valid = false;
+    } 
+    if(valid) {
         postSignupForm(username, password);
     }
 }
