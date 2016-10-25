@@ -53,10 +53,10 @@
 				<hr>
 			</div>
 			<div class="user-input">
-				<form class="form" action="">
+				<form class="form" id="item-form" action="">
 					<input class="input-home" type="text" name="item" placeholder="Enter Item">
+					<button class="btn" id="add-to-list" type="submit"><i  class="icon fa fa-plus-square"></i></button>
 				</form>
-				<i id="add-to-list" class="icon fa fa-plus-square"></i>
 			</div>
 			<br>
 			<div class="list-container">
@@ -72,11 +72,11 @@
 							</div>
 						</div>
 						<div class="edit-item">
-							<form class="form" action="">
+							<form class="form" id="edit-form">
 								<input class="input-home input-edit" type="text" name="item"/>
-								<input class="hidden" type="submit" name=""/>
+								<button type="submit" class="btn" id="edit-list-btn"><i class="icon edit-icon fa fa-plus-square"></i></button>
 							</form>
-							<i class="icon edit-icon fa fa-plus-square"></i>
+							
 						</div>
 					</div>
 				</ul>

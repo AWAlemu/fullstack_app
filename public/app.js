@@ -42,36 +42,21 @@ function checkUncheck(id) {
 
 $(document).ready(function() {
     var userInput = $('input[name=item]');
-    var addButton = $('#add-to-list');
-    //post item on click
-    addButton.mouseup(function(e) {
+    var itemForm = $('#item-form');
+    
+    //post item to list
+    itemForm.submit(function(e){
+        e.preventDefault();
         var item = userInput.val();
         item = item.trim();
         userInput.val('');
         postItem(item);
     });
-    //post item on keypress
-    userInput.on('keypress', function(e) {
-        if (e.keyCode === 13) {
-            var item = userInput.val();
-            userInput.val('');
-            e.preventDefault();
-            postItem(item);
-        }
-    });
     //put edited item on keypress
-    $('ul').on('keypress', '.input-edit', function(e) {
-        if (e.keyCode === 13) {
-            e.preventDefault();
-
-            var id = this.parentElement.parentElement.parentElement.id;
-            var name = $('#' + id + ' input').val();
-            putItem(id, name, false);
-        }
-    });
-    //submit edit event
-    $('ul').on('click', '.edit-icon', function(e) {
-        var id = this.parentElement.parentElement.id;
+    $('ul').submit(function(e) {
+        e.preventDefault();
+        var target = e.target;
+        var id = target.parentElement.parentElement.id;
         var name = $('#' + id + ' input').val();
         putItem(id, name, false);
     });
@@ -101,7 +86,7 @@ $(document).ready(function() {
         $('#login-form #usernameL, #passwordL').val('');
         submitSignin(username, password);
     });
-    //submit signou form
+    //submit signup form
     $('#signup-form').on('submit', function(e) {
         e.preventDefault();
         var username = $('#username').val();

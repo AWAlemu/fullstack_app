@@ -73,6 +73,14 @@
 	min-width: 16em;
 	margin-left: 0em;
 }
+.btn {
+	width: 3em;
+	height: 1.5em;
+	padding: 0em;
+	margin: -0.3em 0em 0em -0.32em;
+	border: 1px solid #fff;
+	background: none;
+}
 .name {
 	cursor: pointer;
 	width: 17em;
