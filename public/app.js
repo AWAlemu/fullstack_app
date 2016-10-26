@@ -1,45 +1,3 @@
-function displayItems(data) {
-    $('#list-results').empty();
-    for (var item in data) {
-        appendItem(data[item].name, data[item]._id, data[item].checked);
-    }
-}
-
-function appendItem(item, id, checked) {
-    if (item) {
-        var itemElement = $('#item-template .item-box').clone();
-        itemElement.attr('id', id);
-
-        var check = itemElement.find('.check');
-        check.attr('class', id);
-
-        var itm = itemElement.find('.name');
-        itm.text(item);
-
-        $('#list-results').append(itemElement);
-        if (checked) {
-            checkUncheck(id);
-        }
-    }
-}
-
-function renderEditItem(name, id) {
-    if (name && id) {
-        var inputEditer = $('#item-template .edit-item').clone();
-
-        var input = inputEditer.find('input');
-        input.val(name);
-
-        $('#' + id + ' .item').hide();
-        $('#' + id).append(inputEditer);
-    }
-}
-
-function checkUncheck(id) {
-    $('#' + id + ' .name').toggleClass('checked');
-    $('#' + id + ' #check').toggleClass('checked');
-}
-
 $(document).ready(function() {
     var userInput = $('input[name=item]');
     var itemForm = $('#item-form');
@@ -100,158 +58,200 @@ $(document).ready(function() {
     $('#signout-btn').on('click', logout);
     
     checkSession();
-});
-
-function validateSignupForm(username, password, confPass) {
-    var valid = true;
-    if (username.length < 4) {
-        $('#usernameErr').text('must be at least 4 characters long');
-        valid = false;
-    } 
-    if (password.length < 8) {
-        $('#passwordErr').text('must be at least 8 characters long');
-        valid = false;
-    } 
-    if (password !== confPass) {
-        $('#conf-passwordErr').text('must match password');
-        valid = false;
-    } 
-    if(valid) {
-        postSignupForm(username, password);
+    
+    function displayItems(data) {
+        $('#list-results').empty();
+        for (var item in data) {
+            appendItem(data[item].name, data[item]._id, data[item].checked);
+        }
     }
-}
 
-function submitSignin(username, password) {
-    var user = {
-        username: username,
-        password: password
-    };
-    var ajax = $.ajax('/hidden', {
-        type: 'POST',
-        data: JSON.stringify(user),
-        dataType: 'json',
-        contentType: 'application/json'
-    });
-    ajax.done(function(res) {
-        if (res.success) {
-            renderUserHomePage();
-            getItems();
+    function appendItem(item, id, checked) {
+        if (item) {
+            var itemElement = $('#item-template .item-box').clone();
+            itemElement.attr('id', id);
+    
+            var check = itemElement.find('.check');
+            check.attr('class', id);
+    
+            var itm = itemElement.find('.name');
+            itm.text(item);
+    
+            $('#list-results').append(itemElement);
+            if (checked) {
+                checkUncheck(id);
+            }
         }
-    }).fail(function(err) {
-        renderLoginPage();
-    });
-}
-
-function logout() {
-    var ajax = $.ajax('/logout', {
-        type: 'GET',
-    });
-    ajax.done(function(res) {
-        renderLoginPage();
-    });
-}
-
-function postSignupForm(username, password) {
-    var item = {
-        'username': username,
-        'password': password
-    };
-    var ajax = $.ajax('/users', {
-        type: 'POST',
-        data: JSON.stringify(item),
-        dataType: 'json',
-        contentType: 'application/json'
-    });
-    ajax.done(function(res) {
-        $('#signup-success').show();
-    }).fail(function(err) {
-        if (err.responseJSON.code == 11000) {
-            userNameTaken();
+    }
+    
+    function renderEditItem(name, id) {
+        if (name && id) {
+            var inputEditer = $('#item-template .edit-item').clone();
+    
+            var input = inputEditer.find('input');
+            input.val(name);
+    
+            $('#' + id + ' .item').hide();
+            $('#' + id).append(inputEditer);
         }
-    });
-}
-
-function userNameTaken() {
-    $('#usernameErr').text('username is already in use');
-}
-
-function renderUserHomePage() {
-    $('.login-signup-screen').hide();
-    $('.user-home-page').show();
-};
-
-function renderLoginPage() {
-    $('.user-home-page').hide();
-    $('.login-signup-screen').show();
-}
-
-function checkSession() {
-    var ajax = $.ajax('/authenticate', {
-        type: 'GET',
-        dataType: 'json'
-    });
-    ajax.done(function(res) {
-        if (!res.success) {
+    }
+    
+    function checkUncheck(id) {
+        $('#' + id + ' .name').toggleClass('checked');
+        $('#' + id + ' #check').toggleClass('checked');
+    }
+    
+    function validateSignupForm(username, password, confPass) {
+        var valid = true;
+        if (username.length < 4) {
+            $('#usernameErr').text('must be at least 4 characters long');
+            valid = false;
+        } 
+        if (password.length < 8) {
+            $('#passwordErr').text('must be at least 8 characters long');
+            valid = false;
+        } 
+        if (password !== confPass) {
+            $('#conf-passwordErr').text('must match password');
+            valid = false;
+        } 
+        if(valid) {
+            postSignupForm(username, password);
+        }
+    }
+    
+    function submitSignin(username, password) {
+        var user = {
+            username: username,
+            password: password
+        };
+        var ajax = $.ajax('/hidden', {
+            type: 'POST',
+            data: JSON.stringify(user),
+            dataType: 'json',
+            contentType: 'application/json'
+        });
+        ajax.done(function(res) {
+            if (res.success) {
+                renderUserHomePage();
+                getItems();
+            }
+        }).fail(function(err) {
             renderLoginPage();
-        } else {
-            renderUserHomePage();
+        });
+    }
+    
+    function logout() {
+        var ajax = $.ajax('/logout', {
+            type: 'GET',
+        });
+        ajax.done(function(res) {
+            renderLoginPage();
+        });
+    }
+    
+    function postSignupForm(username, password) {
+        var item = {
+            'username': username,
+            'password': password
+        };
+        var ajax = $.ajax('/users', {
+            type: 'POST',
+            data: JSON.stringify(item),
+            dataType: 'json',
+            contentType: 'application/json'
+        });
+        ajax.done(function(res) {
+            $('#signup-success').show();
+        }).fail(function(err) {
+            if (err.responseJSON.code == 11000) {
+                userNameTaken();
+            }
+        });
+    }
+    
+    function userNameTaken() {
+        $('#usernameErr').text('username is already in use');
+    }
+    
+    function renderUserHomePage() {
+        $('.login-signup-screen').hide();
+        $('.user-home-page').show();
+    }
+    
+    function renderLoginPage() {
+        $('.user-home-page').hide();
+        $('.login-signup-screen').show();
+    }
+    
+    function checkSession() {
+        var ajax = $.ajax('/authenticate', {
+            type: 'GET',
+            dataType: 'json'
+        });
+        ajax.done(function(res) {
+            if (!res.success) {
+                renderLoginPage();
+            } else {
+                renderUserHomePage();
+                getItems();
+    
+            }
+        }).fail(function(err) {
+            renderLoginPage();
+        });
+    }
+    
+    function postItem(name) {
+        var item = { 'name': name };
+        var ajax = $.ajax('/API/items', {
+            type: 'POST',
+            data: JSON.stringify(item),
+            dataType: 'json',
+            contentType: 'application/json'
+        });
+        ajax.done(function(res) {
             getItems();
-
-        }
-    }).fail(function(err) {
-        renderLoginPage();
-    });
-}
-
-function postItem(name) {
-    var item = { 'name': name };
-    var ajax = $.ajax('/API/items', {
-        type: 'POST',
-        data: JSON.stringify(item),
-        dataType: 'json',
-        contentType: 'application/json'
-    });
-    ajax.done(function(res) {
-        getItems();
-    });
-}
-
-function putItem(id, name, check) {
-    var item = {
-        _id: id,
-        name: name,
-        check: check,
-    };
-    var ajax = $.ajax(('/API/items/' + id), {
-        type: 'PUT',
-        data: JSON.stringify(item),
-        dataType: 'json',
-        contentType: 'application/json'
-    });
-    ajax.done(function(res) {
-        getItems();
-    });
-}
-
-function getItems() {
-    var ajax = $.ajax(('/API/items'), {
-        type: 'GET',
-        dataType: 'json'
-    });
-    ajax.done(function(res) {
-        displayItems(res);
-    });
-}
-
-function deleteItem(id) {
-    var item = { _id: id };
-    var ajax = $.ajax(('API/items/' + id), {
-        type: 'DELETE',
-        data: JSON.stringify(item),
-        dataType: 'json',
-        contentType: 'application/json'
-    });
-    ajax.done(function(res) {
-        getItems();
-    });
-}
+        });
+    }
+    
+    function putItem(id, name, check) {
+        var item = {
+            _id: id,
+            name: name,
+            check: check,
+        };
+        var ajax = $.ajax(('/API/items/' + id), {
+            type: 'PUT',
+            data: JSON.stringify(item),
+            dataType: 'json',
+            contentType: 'application/json'
+        });
+        ajax.done(function(res) {
+            getItems();
+        });
+    }
+    
+    function getItems() {
+        var ajax = $.ajax(('/API/items'), {
+            type: 'GET',
+            dataType: 'json'
+        });
+        ajax.done(function(res) {
+            displayItems(res);
+        });
+    }
+    
+    function deleteItem(id) {
+        var item = { _id: id };
+        var ajax = $.ajax(('API/items/' + id), {
+            type: 'DELETE',
+            data: JSON.stringify(item),
+            dataType: 'json',
+            contentType: 'application/json'
+        });
+        ajax.done(function(res) {
+            getItems();
+        });
+    }
+});
