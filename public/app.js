@@ -16,12 +16,12 @@ $(document).ready(function() {
         var target = e.target;
         var id = target.parentElement.parentElement.id;
         var name = $('#' + id + ' input').val();
-        putItem(id, name, false);
+        updateItemsName(id, name);
     });
     //mark item checked or uncheck
     $('ul').on('click', '#check', function(e) {
         var id = this.parentElement.parentElement.id;
-        putItem(id, '', true);
+        updateItemsMark(id);
         checkUncheck(id);
     });
     //delete item event
@@ -215,13 +215,27 @@ $(document).ready(function() {
         });
     }
     
-    function putItem(id, name, check) {
+    function updateItemsName(id, name) {
         var item = {
             _id: id,
             name: name,
-            check: check,
         };
-        var ajax = $.ajax(('/API/items/' + id), {
+        var ajax = $.ajax(('/API/items/name/' + id), {
+            type: 'PUT',
+            data: JSON.stringify(item),
+            dataType: 'json',
+            contentType: 'application/json'
+        });
+        ajax.done(function(res) {
+            getItems();
+        });
+    }
+    
+    function updateItemsMark(id) {
+        var item = {
+            _id: id,
+        };
+        var ajax = $.ajax(('/API/items/mark/' + id), {
             type: 'PUT',
             data: JSON.stringify(item),
             dataType: 'json',

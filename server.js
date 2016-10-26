@@ -51,69 +51,58 @@ app.post('/API/items', isAuthenticated, function(req, res) {
     });
 });
 
-app.put('/API/items/:id', isAuthenticated, function(req, res) {
-    if (!req.body.check) {
+app.put('/API/items/name/:id', isAuthenticated, function(req, res) {
+    Item.findOneAndUpdate({
+        _id: req.params.id
+    }, {
+        $set: {name: req.body.name}
+    }, {
+        upsert: true
+    }, function(err, item) {
+        if (err) {
+            return res.status(500).json({
+                message: 'Internal Server Error'
+            });
+        }
+        res.status(200).json(item);
+    });
+});
+
+app.put('/API/items/mark/:id', isAuthenticated, function(req, res) {    
+    Item.findOne({_id: req.params.id}, function(err, item) {
+        if (err) {
+            return res.status(500).json({
+                message: 'Internal Server Error'
+            });
+        }
+        
+        if(!item) {
+                return res.status(500).json({
+                message: 'Internal Server Error'
+            });
+        }
+        
+        if (item.checked) {
+            var checked = false;
+        } else {
+            checked = true;
+        }
+        
         Item.findOneAndUpdate({
             _id: req.params.id
         }, {
-            $set: {name: req.body.name}
+            $set: {checked: checked}
         }, {
             upsert: true
         }, function(err, item) {
-            if (err) {
-                return res.status(400).json({
-                    message: 'Internal Server Error'
-                });
-            }
-            res.status(200).json(item);
-        });
-    } else {
-        Item.findOne({_id: req.params.id}, function(err, item) {
             if (err) {
                 return res.status(500).json({
                     message: 'Internal Server Error'
                 });
             }
-            if(!item) {
-                    return res.status(400).json({
-                    message: 'Internal Server Error'
-                });
-            }
-            
-            if (item.checked) {
-                Item.findOneAndUpdate({
-                    _id: req.params.id
-                }, {
-                    $set: {checked: false}
-                }, {
-                    upsert: true
-                }, function(err, item) {
-                    if (err) {
-                        return res.status(400).json({
-                            message: 'Internal Server Error'
-                        });
-                    }
-                    res.status(200).json(item);
-                });
-            } else {
-                Item.findOneAndUpdate({
-                    _id: req.params.id
-                }, {
-                    $set: {checked: true}
-                }, {
-                    upsert: true
-                }, function(err, item) {
-                    if (err) {
-                        return res.status(400).json({
-                            message: 'Internal Server Error'
-                        });
-                    }
-                    res.status(200).json(item);
-                });
-            }
-
+            res.status(200).json(item);
         });
-    }
+    });
 });
 
 app.delete('/API/items/:id', isAuthenticated, function(req, res) {
